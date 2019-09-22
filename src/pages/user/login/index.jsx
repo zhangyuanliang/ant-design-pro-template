@@ -1,5 +1,4 @@
 import { Alert, Checkbox } from 'antd';
-import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import LoginComponents from './components/Login';
@@ -96,36 +95,24 @@ class Login extends Component {
           {status === 'error' &&
             loginType === 'account' &&
             !submitting &&
-            this.renderMessage(
-              formatMessage({
-                id: 'user-login.login.message-invalid-credentials',
-              }),
-            )}
+            this.renderMessage('账户或密码错误（admin/ant.design）')}
           <UserName
             name="userName"
-            placeholder={`${formatMessage({
-              id: 'user-login.login.userName',
-            })}: admin or user`}
+            placeholder={`${'用户名'}: admin or user`}
             rules={[
               {
                 required: true,
-                message: formatMessage({
-                  id: 'user-login.userName.required',
-                }),
+                message: '请输入用户名!',
               },
             ]}
           />
           <Password
             name="password"
-            placeholder={`${formatMessage({
-              id: 'user-login.login.password',
-            })}: 123`}
+            placeholder={`${'密码'}: 123`}
             rules={[
               {
                 required: true,
-                message: formatMessage({
-                  id: 'user-login.password.required',
-                }),
+                message: '请输入密码！',
               },
             ]}
             onPressEnter={e => {
@@ -138,7 +125,7 @@ class Login extends Component {
           />
           <div>
             <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
-              <FormattedMessage id="user-login.login.remember-me" />
+              自动登录
             </Checkbox>
             <a
               style={{
@@ -146,12 +133,10 @@ class Login extends Component {
               }}
               href=""
             >
-              <FormattedMessage id="user-login.login.forgot-password" />
+              忘记密码
             </a>
           </div>
-          <Submit loading={submitting}>
-            <FormattedMessage id="user-login.login.login" />
-          </Submit>
+          <Submit loading={submitting}>登录</Submit>
         </LoginComponents>
       </div>
     );

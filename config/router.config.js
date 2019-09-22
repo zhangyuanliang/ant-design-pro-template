@@ -10,6 +10,8 @@ export default [
       },
     ],
   },
+
+  // app
   {
     path: '/',
     component: '../layouts/SecurityLayout',
@@ -25,15 +27,24 @@ export default [
           },
           {
             path: '/welcome',
-            // name: 'welcome',
-            // icon: 'smile',
             component: './Welcome',
           },
           {
-            path: '/mine',
-            name: 'mine',
-            icon: 'smile',
-            component: './Mine',
+            path: '/myDashboard',
+            name: 'myDashboard',
+            icon: 'icon-dashboard',
+            routes: [
+              {
+                path: '/myDashboard/dashboard_1',
+                name: 'dashboard_1',
+                component: './myDashboard/dashboard_1',
+              },
+              {
+                path: '/myDashboard/dashboard_2',
+                name: 'dashboard_2',
+                component: './myDashboard/dashboard_2',
+              },
+            ],
           },
           {
             component: './404',
