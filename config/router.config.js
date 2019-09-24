@@ -31,18 +31,19 @@ export default [
           },
           {
             path: '/myDashboard',
-            name: 'myDashboard',
-            icon: 'icon-dashboard',
+            name: '我的面板',
+            icon: 'desktop',
             routes: [
               {
                 path: '/myDashboard/dashboard_1',
-                name: 'dashboard_1',
+                name: '面板_1',
                 component: './myDashboard/dashboard_1',
               },
               {
                 path: '/myDashboard/dashboard_2',
-                name: 'dashboard_2',
+                name: '高级面板_2',
                 component: './myDashboard/dashboard_2',
+                authority: ['admin'],
               },
             ],
           },

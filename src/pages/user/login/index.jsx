@@ -80,7 +80,7 @@ class Login extends Component {
 
   render() {
     const { userLogin, submitting } = this.props;
-    const { status, type: loginType } = userLogin;
+    const { status } = userLogin;
     const { type, autoLogin } = this.state;
     return (
       <div className={styles.main}>
@@ -92,12 +92,9 @@ class Login extends Component {
             this.loginForm = form;
           }}
         >
-          {status === 'error' &&
-            loginType === 'account' &&
-            !submitting &&
-            this.renderMessage('账户或密码错误（admin/ant.design）')}
+          {status === 'error' && !submitting && this.renderMessage('账户或密码错误（admin/123）')}
           <UserName
-            name="userName"
+            name="account"
             placeholder={`${'用户名'}: admin or user`}
             rules={[
               {

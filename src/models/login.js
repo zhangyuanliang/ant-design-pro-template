@@ -1,22 +1,38 @@
 import { routerRedux } from 'dva/router';
 import { stringify } from 'querystring';
+import { reloadAuthorized } from '@/utils/Authorized';
 import { fakeAccountLogin, getFakeCaptcha } from '@/services/login';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
+
 const Model = {
   namespace: 'login',
   state: {
-    status: undefined,
+    status: null,
+    token: null,
+    account: null,
   },
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(fakeAccountLogin, payload);
+      const {
+        code,
+        data: { token, auth },
+      } = response;
       yield put({
         type: 'changeLoginStatus',
-        payload: response,
-      }); // Login successfully
+        payload: {
+          token: token || null,
+          account: payload.account || null,
+          currentAuthority: auth || null,
+          status: code === 'A00000' ? 'ok' : 'error',
+        },
+      });
 
-      if (response.status === 'ok') {
+      if (code === 'A00000') {
+        localStorage.setItem('account', payload.account);
+        localStorage.setItem('access-token', token);
+        reloadAuthorized();
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params;
@@ -61,8 +77,19 @@ const Model = {
   },
   reducers: {
     changeLoginStatus(state, { payload }) {
-      setAuthority(payload.currentAuthority);
-      return { ...state, status: payload.status, type: payload.type };
+      if (payload.currentAuthority) {
+        setAuthority(payload.currentAuthority);
+      }
+      if (!payload.token) {
+        localStorage.setItem('access-token', '');
+        localStorage.setItem('account', '');
+      }
+      return {
+        ...state,
+        status: payload.status,
+        token: payload.token,
+        account: payload.account,
+      };
     },
   },
 };
