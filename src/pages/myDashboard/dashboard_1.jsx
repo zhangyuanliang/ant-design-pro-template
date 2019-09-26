@@ -74,8 +74,8 @@ class DashboardOne extends Component {
       pagination: { pageSize, current },
     } = this.state;
     const param = {
-      selectedType,
-      searchField,
+      selectedType: selectedType || null,
+      searchField: searchField ? searchField.trim() : null,
       pageSize,
       pageIndex: current,
     };
@@ -123,7 +123,7 @@ class DashboardOne extends Component {
   handleSearchChange = e => {
     e.persist();
     this.setState({
-      searchField: e.currentTarget.value.trim(),
+      searchField: e.currentTarget.value,
     });
   };
 
@@ -158,6 +158,9 @@ class DashboardOne extends Component {
           <Option value="1" key="1">
             test1
           </Option>
+          <Option value="2" key="2">
+            test2
+          </Option>
         </Select>
         <div className={styles.inputWidth}>
           <Search
@@ -167,7 +170,6 @@ class DashboardOne extends Component {
             value={searchField}
             allowClear
             placeholder="搜索"
-            // className={styles.inputWidth}
             enterButton
           />
         </div>
@@ -189,6 +191,7 @@ class DashboardOne extends Component {
           pagination={pagination}
           onChange={this.handleTableChange}
           onShowSizeChange={this.handleTableChange}
+          size="middle"
         />
       </Card>
     );

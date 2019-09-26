@@ -9,13 +9,8 @@ import styles from './index.less';
 
 class Login extends Component {
   static Tab = LoginTab;
+
   static Submit = LoginSubmit;
-  static defaultProps = {
-    className: '',
-    defaultActiveKey: '',
-    onTabChange: () => {},
-    onSubmit: () => {},
-  };
 
   constructor(props) {
     super(props);
@@ -30,7 +25,7 @@ class Login extends Component {
     const { form, onCreate } = this.props;
 
     if (onCreate) {
-      onCreate(form);
+      onCreate(form); // 将子组件form传递给父组件
     }
   }
 
@@ -48,6 +43,7 @@ class Login extends Component {
       },
     );
   };
+
   getContext = () => {
     const { form } = this.props;
     const { tabs = [] } = this.state;
@@ -80,6 +76,7 @@ class Login extends Component {
       },
     };
   };
+
   handleSubmit = e => {
     e.preventDefault();
     const { active = {}, type = '' } = this.state;
