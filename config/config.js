@@ -129,7 +129,7 @@ export default {
   /*
   proxy: {
     '/api': {
-      target: 'https://preview.pro.ant.design/',
+      target: 'http://172.31.98.66:8183/', // 冯炫
       changeOrigin: true,
     },
   },

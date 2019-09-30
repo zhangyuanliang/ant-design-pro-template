@@ -28,7 +28,7 @@ const Model = {
           status: code === 'A00000' ? 'ok' : 'error',
         },
       });
-
+      // Login successfully
       if (code === 'A00000') {
         localStorage.setItem('account', payload.account);
         localStorage.setItem('access-token', token);
@@ -36,22 +36,18 @@ const Model = {
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params;
-
         if (redirect) {
           const redirectUrlParams = new URL(redirect);
-
           if (redirectUrlParams.origin === urlParams.origin) {
             redirect = redirect.substr(urlParams.origin.length);
-
-            if (redirect.match(/^\/.*#/)) {
-              redirect = redirect.substr(redirect.indexOf('#') + 1);
+            if (redirect.startsWith('/#')) {
+              redirect = redirect.substr(2);
             }
           } else {
             window.location.href = redirect;
             return;
           }
         }
-
         yield put(routerRedux.replace(redirect || '/'));
       }
     },
@@ -61,8 +57,17 @@ const Model = {
     },
 
     *logout(_, { put }) {
+      yield put({
+        type: 'changeLoginStatus',
+        payload: {
+          token: null,
+          account: null,
+          currentAuthority: ['guest'],
+          // status: code === 'A00000' ? 'ok' : 'error',
+        },
+      });
       const { redirect } = getPageQuery(); // redirect
-
+      reloadAuthorized();
       if (window.location.pathname !== '/user/login' && !redirect) {
         yield put(
           routerRedux.replace({

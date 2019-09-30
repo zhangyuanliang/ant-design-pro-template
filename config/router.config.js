@@ -12,75 +12,84 @@ export default [
   }, // app
   {
     path: '/',
-    component: '../layouts/SecurityLayout',
+    component: '../layouts/BasicLayout',
+    Routes: ['src/pages/Authorized'],
     routes: [
       {
         path: '/',
-        component: '../layouts/BasicLayout',
-        authority: ['admin', 'user'],
+        redirect: '/welcome',
+      },
+      {
+        path: '/welcome',
+        component: './Welcome',
+      },
+      {
+        path: '/serDashboard',
+        name: '服务平台',
+        icon: 'desktop',
         routes: [
           {
-            path: '/',
-            redirect: '/welcome',
+            path: '/serDashboard/manageCoupon',
+            name: '券码管理',
+            component: './serDashboard/manageCoupon',
           },
           {
-            path: '/welcome',
-            component: './Welcome',
+            path: '/serDashboard/serviceBills',
+            name: '服务清单',
+            component: './serDashboard/serviceBills',
           },
           {
-            path: '/myDashboard',
-            name: '我的面板',
-            icon: 'desktop',
-            routes: [
-              {
-                path: '/myDashboard/dashboard_1',
-                name: '面板_1',
-                component: './myDashboard/dashboard_1',
-              },
-              {
-                path: '/myDashboard/dashboard_2',
-                name: '高级面板_2',
-                component: './myDashboard/dashboard_2',
-                authority: ['admin'],
-              },
-            ],
-          },
-          {
-            name: 'exception',
-            path: '/exception',
-            hideInMenu: true,
-            routes: [
-              // exception
-              {
-                path: '/exception/403',
-                name: 'not-permission',
-                component: './Exception/403',
-              },
-              {
-                path: '/exception/404',
-                name: 'not-find',
-                component: './Exception/404',
-              },
-              {
-                path: '/exception/500',
-                name: 'server-error',
-                component: './Exception/500',
-              },
-              {
-                path: '/exception/trigger',
-                name: 'trigger',
-                hideInMenu: true,
-                component: './Exception/TriggerException',
-              },
-            ],
-          },
-          {
-            component: './404',
+            path: '/serDashboard/manageAccount',
+            name: '账号管理',
+            component: './serDashboard/manageAccount',
           },
         ],
       },
+      // {
+      //   path: '/myDashboard',
+      //   name: '我的面板',
+      //   icon: 'desktop',
+      //   routes: [
+      //     {
+      //       path: '/myDashboard/dashboard_1',
+      //       name: '面板_1',
+      //       component: './myDashboard/dashboard_1',
+      //     },
+      //     {
+      //       path: '/myDashboard/dashboard_2',
+      //       name: '高级面板_2',
+      //       component: './myDashboard/dashboard_2',
+      //       authority: ['admin'],
+      //     },
+      //   ],
+      // },
       {
-        component: './404',
+        name: 'exception',
+        path: '/exception',
+        hideInMenu: true,
+        routes: [
+          {
+            path: '/exception/403',
+            name: 'not-permission',
+            component: './exception/403',
+          },
+          {
+            path: '/exception/404',
+            name: 'not-find',
+            component: './exception/404',
+          },
+          {
+            path: '/exception/500',
+            name: 'server-error',
+            component: './exception/500',
+          },
+          {
+            path: '/exception/trigger',
+            name: 'trigger',
+            hideInMenu: true,
+            component: './exception/TriggerException',
+          },
+        ],
       },
     ],
   },

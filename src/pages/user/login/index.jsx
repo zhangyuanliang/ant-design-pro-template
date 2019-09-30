@@ -95,7 +95,7 @@ class Login extends Component {
           {status === 'error' && !submitting && this.renderMessage('账户或密码错误（admin/123）')}
           <UserName
             name="account"
-            placeholder={`${'用户名'}: admin or user`}
+            placeholder="用户名: admin or user"
             rules={[
               {
                 required: true,
@@ -105,7 +105,7 @@ class Login extends Component {
           />
           <Password
             name="password"
-            placeholder={`${'密码'}: 123`}
+            placeholder="密码: 123"
             rules={[
               {
                 required: true,
@@ -120,7 +120,7 @@ class Login extends Component {
               }
             }}
           />
-          <div>
+          {/* <div>
             <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
               自动登录
             </Checkbox>
@@ -132,7 +132,7 @@ class Login extends Component {
             >
               忘记密码
             </a>
-          </div>
+          </div> */}
           <Submit loading={submitting}>登录</Submit>
         </LoginComponents>
       </div>
