@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import { connect } from 'dva';
 import { Modal, Button, Form, Input, Select } from 'antd';
 import styles from '../index.less';
 
 const { Option } = Select;
 
 @Form.create()
+@connect()
 class NewModal extends Component {
   constructor(props) {
     super(props);
@@ -17,13 +19,23 @@ class NewModal extends Component {
   }
 
   handleOk = e => {
-    const { form, hide } = this.props;
+    const { form, hide, dispatch } = this.props;
     form.validateFields((err, values) => {
       if (err) {
         return;
       }
-      form.resetFields();
-      hide(true);
+      const param = {
+        ...values,
+      };
+      dispatch({
+        type: 'coupon/toNewbranch',
+        payload: param,
+      }).then(res => {
+        if (res.code === 'A00000') {
+          form.resetFields();
+          hide(true);
+        }
+      });
     });
   };
 
@@ -48,11 +60,12 @@ class NewModal extends Component {
         onCancel={this.handleCancel}
         centered={true}
         width={740}
+        className={styles.newModal}
       >
         <Form layout="inline">
           <div style={{ display: 'flex' }}>
             <Form.Item label="承保分公司" className={styles.formItem}>
-              {getFieldDecorator('role', {
+              {getFieldDecorator('branchName', {
                 rules: [
                   {
                     required: true,
@@ -72,7 +85,7 @@ class NewModal extends Component {
               )}
             </Form.Item>
             <Form.Item label="大保单号" className={styles.formItem}>
-              {getFieldDecorator('phone', {
+              {getFieldDecorator('bigPolicy', {
                 rules: [
                   {
                     required: true,
@@ -88,7 +101,7 @@ class NewModal extends Component {
           </div>
           <div style={{ display: 'flex' }}>
             <Form.Item label="被保险人" className={styles.formItem}>
-              {getFieldDecorator('account', {
+              {getFieldDecorator('insurer', {
                 rules: [
                   {
                     required: true,
@@ -102,7 +115,7 @@ class NewModal extends Component {
               })(<Input placeholder="请输入" allowClear style={{ width: 200 }} />)}
             </Form.Item>
             <Form.Item label="小保单号" className={styles.formItem}>
-              {getFieldDecorator('branch', {
+              {getFieldDecorator('smallPolicy', {
                 rules: [
                   {
                     required: true,
@@ -118,7 +131,7 @@ class NewModal extends Component {
           </div>
           <div style={{ display: 'flex' }}>
             <Form.Item label="车架号" className={styles.formItem}>
-              {getFieldDecorator('account', {
+              {getFieldDecorator('carframe', {
                 rules: [
                   {
                     required: true,
@@ -132,7 +145,7 @@ class NewModal extends Component {
               })(<Input placeholder="请输入" allowClear style={{ width: 200 }} />)}
             </Form.Item>
             <Form.Item label="车牌号" className={styles.formItem}>
-              {getFieldDecorator('branch', {
+              {getFieldDecorator('license', {
                 rules: [
                   {
                     min: 7,
@@ -145,7 +158,7 @@ class NewModal extends Component {
           </div>
           <div style={{ display: 'flex' }}>
             <Form.Item label="业务员" className={styles.formItem}>
-              {getFieldDecorator('account', {
+              {getFieldDecorator('salesman', {
                 rules: [
                   {
                     required: true,
@@ -159,7 +172,7 @@ class NewModal extends Component {
               })(<Input placeholder="请输入" allowClear style={{ width: 200 }} />)}
             </Form.Item>
             <Form.Item label="业务员手机号" className={styles.formItem}>
-              {getFieldDecorator('branch', {
+              {getFieldDecorator('salesmanPhone', {
                 rules: [
                   {
                     required: true,

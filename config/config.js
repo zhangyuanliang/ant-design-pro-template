@@ -126,12 +126,11 @@ export default {
     basePath: '/',
   },
   chainWebpack: webpackPlugin,
-  /*
+
   proxy: {
     '/api': {
       target: 'http://172.31.98.66:8183/', // 冯炫
       changeOrigin: true,
     },
   },
-  */
 };

@@ -16,14 +16,14 @@ export default {
           id: '2',
           name: '账户名2',
           phone: 16666666666,
-          role: 1,
+          role: 2,
           branch: '北京分公司',
         },
         {
           id: '3',
           name: '账户名3',
           phone: 16666666666,
-          role: 1,
+          role: 3,
           branch: '北京分公司',
         },
         {
@@ -96,5 +96,14 @@ export default {
     msg: '操作成功',
     code: 'A00000',
     data: null,
+  },
+  'POST /api/accounts/queryRoles': {
+    msg: '操作成功',
+    code: 'A00000',
+    data: [
+      { id: 1, name: '太平总管理员' },
+      { id: 2, name: '太平分公司管理员' },
+      { id: 3, name: '中恒骏业' },
+    ],
   },
 };

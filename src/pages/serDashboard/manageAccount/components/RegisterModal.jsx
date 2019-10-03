@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
 import { Modal, Button, Form, Input, Select } from 'antd';
+import { connect } from 'dva';
+import { getAuthority } from '@/utils/authority';
 
 const { Option } = Select;
 
 @Form.create()
+@connect(({ accounts }) => ({
+  accountRoles: accounts.roles,
+}))
 class RegisterModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      accountRoles: [
-        { paramKey: '1', paramValue: 'test1' },
-        { paramKey: '2', paramValue: 'test2' },
-      ],
+      currentRole: getAuthority()[0],
+      branchRequired: false,
     };
   }
 
@@ -49,12 +52,25 @@ class RegisterModal extends Component {
     callback();
   };
 
+  changeRole = val => {
+    let branchRequired = false;
+    if (val === 2) {
+      branchRequired = true;
+    } else {
+      this.props.form.setFieldsValue({ branch: '' });
+    }
+    this.setState({
+      branchRequired,
+    });
+  };
+
   render() {
     const {
       visible,
+      accountRoles,
       form: { getFieldDecorator },
     } = this.props;
-    const { accountRoles } = this.state;
+    const { branchRequired, currentRole } = this.state;
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -140,34 +156,45 @@ class RegisterModal extends Component {
           </Form.Item>
           <Form.Item label="账户角色">
             {getFieldDecorator('role', {
+              initialValue: currentRole,
               rules: [
                 {
                   required: true,
-                  message: '请输入手机号！',
+                  message: '请输入账户角色！',
                 },
               ],
             })(
-              <Select allowClear placeholder="请选择" style={{ width: 180 }}>
+              <Select
+                disabled={[2, 3].includes(currentRole)}
+                defaultValue={currentRole}
+                onChange={this.changeRole}
+                placeholder="请选择"
+                style={{ width: 180 }}
+              >
                 {accountRoles.map(it => {
                   return (
-                    <Option value={it.paramKey} key={it.paramKey}>
-                      {it.paramValue}
+                    <Option value={it.id} key={it.name}>
+                      {it.name}
                     </Option>
                   );
                 })}
               </Select>,
             )}
           </Form.Item>
-          <Form.Item label="承保分公司">
-            {getFieldDecorator('branch', {
-              rules: [
-                {
-                  required: true,
-                  message: '请输入承保分公司！',
-                },
-              ],
-            })(<Input placeholder="请输入" allowClear />)}
-          </Form.Item>
+          {currentRole === 3 ? (
+            ''
+          ) : (
+            <Form.Item label="承保分公司">
+              {getFieldDecorator('branch', {
+                rules: [
+                  {
+                    required: branchRequired,
+                    message: '请输入承保分公司！',
+                  },
+                ],
+              })(<Input disabled={currentRole === 2} placeholder="请输入" allowClear />)}
+            </Form.Item>
+          )}
         </Form>
       </Modal>
     );

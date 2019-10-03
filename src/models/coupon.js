@@ -1,4 +1,4 @@
-import { queryCoupon, queryDetail, cancelTick } from '@/services/coupon';
+import { queryCoupon, queryDetail, cancelTick, newBranch, exportExcel } from '@/services/coupon';
 import { message } from 'antd';
 
 const CouponModel = {
@@ -29,6 +29,20 @@ const CouponModel = {
       if (res.code === 'A00000') {
         message.success(res.msg);
       }
+      return res;
+    },
+    *toNewbranch({ payload }, { call }) {
+      const res = yield call(newBranch, payload);
+      if (res.code === 'A00000') {
+        message.success(res.msg);
+      }
+      return res;
+    },
+    *toExportExcel({ payload }, { call }) {
+      const res = yield call(exportExcel, payload);
+      // if (res.code === 'A00000') {
+      //   message.success(res.msg)
+      // }
       return res;
     },
   },

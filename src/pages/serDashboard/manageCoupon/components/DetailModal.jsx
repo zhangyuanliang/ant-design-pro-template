@@ -69,7 +69,47 @@ class DetailModal extends Component {
     };
   }
 
-  getList = () => {};
+  getList = () => {
+    const { dispatch, detailRecord } = this.props;
+    const { searchField, pageIndex, pageSize } = this.state;
+    const param = {
+      ...detailRecord,
+      searchField: searchField,
+      pageSize,
+      pageIndex,
+    };
+    dispatch({
+      type: 'coupon/fetchDetail',
+      payload: param,
+    }).then(res => {
+      if (res.code === 'A00000') {
+      }
+    });
+  };
+
+  handleSearchChange = e => {
+    e.persist();
+    this.setState({
+      searchField: e.currentTarget.value,
+    });
+  };
+
+  onSearch = val => {
+    const { pagination } = this.state;
+    this.setState(
+      {
+        searchField: val,
+        pagination: {
+          ...pagination,
+          pageSize: 10,
+          current: 1,
+        },
+      },
+      () => {
+        this.getList();
+      },
+    );
+  };
 
   handleOk = e => {
     const { hide } = this.props;
@@ -107,10 +147,10 @@ class DetailModal extends Component {
       >
         <div className={styles.detailPanel}>
           <Search
-            value={searchField}
+            // value={searchField}
             onSearch={this.onSearch}
             onPressEnter={this.onSearch}
-            onChange={this.handleSearchChange}
+            // onChange={this.handleSearchChange}
             placeholder="大保单号／小保单号"
             enterButton
             allowClear

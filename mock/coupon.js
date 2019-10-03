@@ -1,5 +1,5 @@
 export default {
-  'POST /api/coupon/queryCoupon': {
+  'POST /api/insuranceCoupon/getBranchList': {
     msg: '操作成功',
     code: 'A00000',
     data: {
@@ -116,7 +116,27 @@ export default {
       ],
     },
   },
-  'POST /api/coupon/queryDetail': {
+  'POST /api/insuranceCoupon/import': {
+    msg: '操作成功',
+    code: 'A00000',
+    data: null,
+  },
+  'POST /api/insuranceCoupon/export': {
+    msg: '操作成功',
+    code: 'A00000',
+    data: null,
+  },
+  'POST /api/insuranceCoupon/newBranch': {
+    msg: '操作成功',
+    code: 'A00000',
+    data: null,
+  },
+  'POST /api/insuranceCoupon/exportExcel': {
+    msg: '操作成功',
+    code: 'A00000',
+    data: null,
+  },
+  'POST /api/insuranceCoupon/queryDetail': {
     msg: '操作成功',
     code: 'A00000',
     data: {
@@ -233,7 +253,7 @@ export default {
       ],
     },
   },
-  'POST /api/coupon/cancelTick': {
+  'POST /api/insuranceCoupon/cancelTick': {
     msg: '操作成功',
     code: 'A00000',
     data: null,

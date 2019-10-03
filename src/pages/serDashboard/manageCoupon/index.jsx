@@ -1,12 +1,25 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
-import { Form, Select, Table, Card, Upload, message, Button, Icon, Modal, Input } from 'antd';
+import {
+  Form,
+  Select,
+  Table,
+  Card,
+  Upload,
+  message,
+  Button,
+  Icon,
+  Modal,
+  Input,
+  Divider,
+} from 'antd';
 import NewModal from './components/NewModal';
 import DetailModal from './components/DetailModal';
 import styles from './index.less';
 
 const { Option } = Select;
+const { confirm } = Modal;
 
 @connect(({ coupon }) => ({
   dataSource: coupon.dataSource,
@@ -41,6 +54,7 @@ class ManageCoupon extends Component {
         return (
           <div className={styles.operation}>
             <a onClick={() => this.showDetailModal(record)}>详情</a>
+            <Divider type="vertical" />
             <a onClick={() => this.showTicketModal(record)}>核券</a>
           </div>
         );
@@ -53,19 +67,21 @@ class ManageCoupon extends Component {
     this.state = {
       selectedBranch: undefined,
       selectedOrganization: undefined,
+      selectedRowKeys: [],
       pagination: {
         showTotal: total => `共${total}条`,
         showSizeChanger: true,
         showQuickJumper: true,
-        pageSize: 10,
+        pageSize: 20,
         current: 1,
       },
-      isShowNewModal: true,
+      isShowNewModal: false,
       isShowDetailModal: false,
       detailRecord: null,
       isShowTicketModal: false,
       ticketRecord: null,
       ticketNum: undefined,
+      isShowEmailModal: false,
     };
   }
 
@@ -100,6 +116,10 @@ class ManageCoupon extends Component {
     });
   };
 
+  onSelectChange = selectedRowKeys => {
+    this.setState({ selectedRowKeys });
+  };
+
   handleTableChange = pagination => {
     this.setState(
       {
@@ -118,7 +138,7 @@ class ManageCoupon extends Component {
         selectedBranch: val,
         pagination: {
           ...pagination,
-          pageSize: 10,
+          pageSize: 20,
           current: 1,
         },
       },
@@ -135,7 +155,7 @@ class ManageCoupon extends Component {
         selectedOrganization: val,
         pagination: {
           ...pagination,
-          pageSize: 10,
+          pageSize: 20,
           current: 1,
         },
       },
@@ -151,7 +171,10 @@ class ManageCoupon extends Component {
     });
   };
 
-  hideNewModal = () => {
+  hideNewModal = isRefresh => {
+    if (isRefresh) {
+      this.getList();
+    }
     this.setState({
       isShowNewModal: false,
     });
@@ -160,6 +183,7 @@ class ManageCoupon extends Component {
   showDetailModal = record => {
     const { dispatch } = this.props;
     const param = {
+      ...record,
       searchField: null,
       pageSize: 10,
       pageIndex: 1,
@@ -171,12 +195,16 @@ class ManageCoupon extends Component {
       if (res.code === 'A00000') {
         this.setState({
           isShowDetailModal: true,
+          detailRecord: record,
         });
       }
     });
   };
 
-  hideDetailModal = () => {
+  hideDetailModal = isRefresh => {
+    if (isRefresh) {
+      this.getList();
+    }
     this.setState({
       isShowDetailModal: false,
     });
@@ -192,7 +220,7 @@ class ManageCoupon extends Component {
   ticketOk = () => {
     const { dispatch, form } = this.props;
     const { ticketNum, ticketRecord } = this.state;
-    form.validateFields((err, values) => {
+    form.validateFields(['price'], (err, values) => {
       if (err) {
         return;
       }
@@ -239,12 +267,116 @@ class ManageCoupon extends Component {
     callback('请输入核券数量!');
   };
 
+  exportConfirm() {
+    var _this = this;
+    confirm({
+      title: '导出报表',
+      centered: true,
+      content: `确定要导出所选订单的报表吗?`,
+      okText: '确认',
+      cancelText: '取消',
+      onOk() {
+        _this.handleExportExcel();
+      },
+      onCancel() {},
+    });
+  }
+
+  changeEmail = e => {
+    this.setState({
+      emailAdress: e.target.value,
+    });
+  };
+
+  handleExportExcel() {
+    const {
+      selectedRowKeys,
+      selectedBranch,
+      selectedOrganization,
+      searchField,
+      emailAdress,
+      pagination: { total },
+    } = this.state;
+    const {
+      dispatch,
+      form: { getFieldDecorator },
+    } = this.props;
+    // 导出报表
+    if (!selectedRowKeys.length && total >= 1) {
+      this.setState({
+        isShowEmailModal: true,
+      });
+    } else if (selectedRowKeys.length) {
+      const param = {
+        ids: selectedRowKeys,
+      };
+      this.handleExport(param);
+    } else {
+      const param = {
+        selectedBranch: selectedBranch || null,
+        selectedOrganization: selectedOrganization || null,
+        searchField: searchField ? searchField.trim() : null,
+      };
+      this.handleExport(param);
+    }
+  }
+
+  handleExport(data) {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'coupon/toExportExcel',
+      payload: data,
+    }).then(blob => {
+      if (blob instanceof Blob) {
+        const a = document.createElement('a');
+        const fileName = `${moment(new Date()).format('YYYY-MM-DD')}`;
+        a.href = URL.createObjectURL(blob);
+        a.download = `${fileName}.xls`;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      }
+    });
+  }
+
+  closeEmailModal = () => {
+    this.setState({
+      isShowEmailModal: false,
+    });
+    this.props.form.resetFields();
+  };
+
+  handleOk = () => {
+    const { dispatch } = this.props;
+    const { selectedBranch, selectedOrganization, searchField } = this.state;
+    this.props.form.validateFields(['emailAdress'], (err, values) => {
+      if (err) {
+        return;
+      }
+      const param = {
+        selectedType: selectedBranch || null,
+        searchField: selectedOrganization || null,
+        ...values,
+      };
+      dispatch({
+        type: 'coupon/toExportExcel',
+        payload: param,
+      }).then(res => {
+        if (res.code === 'A00000') {
+          message.success(res.msg);
+          this.closeEmailModal();
+        }
+      });
+    });
+  };
+
   getSearchPanel = () => {
     const { selectedBranch, selectedOrganization } = this.state;
-
-    const props = {
+    const url = `/api/insuranceCoupon/import`;
+    const importProps = {
       name: 'file',
-      action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+      action: url,
       showUploadList: false,
       headers: {
         authorization: 'authorization-text',
@@ -291,12 +423,14 @@ class ManageCoupon extends Component {
             test2
           </Option>
         </Select>
-        <Upload {...props}>
+        <Upload {...importProps}>
           <Button>
             <Icon type="upload" /> 导入
           </Button>
         </Upload>
-        <Button icon="download">导出</Button>
+        <Button onClick={() => this.exportConfirm()} icon="download">
+          导出
+        </Button>
         <Button onClick={() => this.showNewModal()} type="primary" icon="plus">
           新增
         </Button>
@@ -306,16 +440,23 @@ class ManageCoupon extends Component {
 
   render() {
     const {
+      selectedRowKeys,
       pagination,
       isShowDetailModal,
       isShowTicketModal,
       ticketNum,
       isShowNewModal,
+      detailRecord,
+      isShowEmailModal,
     } = this.state;
     const {
       dataSource,
       form: { getFieldDecorator },
     } = this.props;
+    const rowSelection = {
+      selectedRowKeys,
+      onChange: this.onSelectChange,
+    };
 
     return (
       <Card>
@@ -324,13 +465,18 @@ class ManageCoupon extends Component {
           dataSource={dataSource}
           columns={this.columns}
           rowKey={record => record.id}
+          rowSelection={rowSelection}
           pagination={pagination}
           onChange={this.handleTableChange}
           onShowSizeChange={this.handleTableChange}
           size="middle"
         />
         <NewModal visible={isShowNewModal} hide={this.hideNewModal}></NewModal>
-        <DetailModal visible={isShowDetailModal} hide={this.hideDetailModal}></DetailModal>
+        <DetailModal
+          visible={isShowDetailModal}
+          hide={this.hideDetailModal}
+          detailRecord={detailRecord}
+        ></DetailModal>
         <Modal
           title="核券"
           visible={isShowTicketModal}
@@ -340,11 +486,37 @@ class ManageCoupon extends Component {
           width={460}
         >
           <Form layout="inline" style={{ display: 'flex', justifyContent: 'center' }}>
-            <Form.Item label="请输入核券数量">
+            <Form.Item label="请输入核券数量" style={{ marginBottom: 0, height: 40 }}>
               {getFieldDecorator('price', {
                 initialValue: ticketNum,
                 rules: [{ validator: this.checkNum }],
               })(<Input placeholder="请输入" />)}
+            </Form.Item>
+          </Form>
+        </Modal>
+        <Modal
+          title="提示"
+          visible={isShowEmailModal}
+          onOk={this.handleOk}
+          onCancel={this.closeEmailModal}
+          centered={true}
+          width={380}
+        >
+          <p style={{ fontSize: 12 }}>导出单量已达到上限1000条，报表发送至您的邮箱</p>
+          <Form layout="inline" style={{ display: 'flex', justifyContent: 'center' }}>
+            <Form.Item label="邮箱：" style={{ marginBottom: 0, height: 40 }}>
+              {getFieldDecorator('emailAdress', {
+                rules: [
+                  {
+                    type: 'email',
+                    message: '请输入正确的邮箱',
+                  },
+                  {
+                    required: true,
+                    message: '请输入邮箱!',
+                  },
+                ],
+              })(<Input placeholder="请输入邮箱" style={{ width: 230 }} allowClear />)}
             </Form.Item>
           </Form>
         </Modal>

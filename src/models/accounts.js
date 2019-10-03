@@ -1,13 +1,11 @@
-import { queryAccounts, deleteAccount } from '@/services/accounts';
+import { queryAccounts, deleteAccount, queryRoles } from '@/services/accounts';
 import { message } from 'antd';
 
 const AccountsModel = {
   namespace: 'accounts',
   state: {
     dataSource: [],
-    roles: {
-      1: '太平总管理员',
-    },
+    roles: [],
   },
   effects: {
     *fetchAccounts({ payload }, { call, put }) {
@@ -25,12 +23,26 @@ const AccountsModel = {
       }
       return res;
     },
+    *fetchRoles({ payload }, { call, put }) {
+      const res = yield call(queryRoles, payload);
+      yield put({
+        type: 'saveRoles',
+        payload: res.data,
+      });
+      return res;
+    },
   },
   reducers: {
     saveAccounts(state, { payload }) {
       return {
         ...state,
         dataSource: payload.dashboardVo || [],
+      };
+    },
+    saveRoles(state, { payload }) {
+      return {
+        ...state,
+        roles: payload || [],
       };
     },
   },

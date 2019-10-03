@@ -12,7 +12,7 @@ export default {
           address: '1251678',
           status: '1251678',
           time: 1569230866842,
-          operation: '删除',
+          mark: 1,
         },
         {
           id: '2',
@@ -21,7 +21,7 @@ export default {
           address: '1251678',
           status: '1251678',
           time: 1569230866842,
-          operation: '删除',
+          mark: 2,
         },
         {
           id: '3',
@@ -30,7 +30,7 @@ export default {
           address: '1251678',
           status: '1251678',
           time: 1569230866842,
-          operation: '删除',
+          mark: 1,
         },
         {
           id: '4',
@@ -39,7 +39,7 @@ export default {
           address: '1251678',
           status: '1251678',
           time: 1569230866842,
-          operation: '删除',
+          mark: 1,
         },
         {
           id: '5',
@@ -48,7 +48,7 @@ export default {
           address: '1251678',
           status: '1251678',
           time: 1569230866842,
-          operation: '删除',
+          mark: 2,
         },
         {
           id: '6',
@@ -57,7 +57,7 @@ export default {
           address: '1251678',
           status: '1251678',
           time: 1569230866842,
-          operation: '删除',
+          mark: 2,
         },
         {
           id: '7',
@@ -66,7 +66,7 @@ export default {
           address: '1251678',
           status: '1251678',
           time: 1569230866842,
-          operation: '删除',
+          mark: 2,
         },
         {
           id: '8',
@@ -75,7 +75,7 @@ export default {
           address: '1251678',
           status: '1251678',
           time: 1569230866842,
-          operation: '删除',
+          mark: 2,
         },
         {
           id: '9',
@@ -84,7 +84,7 @@ export default {
           address: '1251678',
           status: '1251678',
           time: 1569230866842,
-          operation: '删除',
+          mark: 2,
         },
         {
           id: '10',
@@ -93,7 +93,7 @@ export default {
           address: '1251678',
           status: '1251678',
           time: 1569230866842,
-          operation: '删除',
+          mark: 2,
         },
         {
           id: '11',
@@ -102,7 +102,7 @@ export default {
           address: '1251678',
           status: '1251678',
           time: 1569230866842,
-          operation: '删除',
+          mark: 2,
         },
         {
           id: '12',
@@ -111,12 +111,17 @@ export default {
           address: '1251678',
           status: '1251678',
           time: 1569230866842,
-          operation: '删除',
+          mark: 2,
         },
       ],
     },
   },
   'POST /api/service/tagServiceBill': {
+    msg: '操作成功',
+    code: 'A00000',
+    data: null,
+  },
+  'POST /api/service/exportExcel': {
     msg: '操作成功',
     code: 'A00000',
     data: null,

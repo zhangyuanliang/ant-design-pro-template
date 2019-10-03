@@ -35,7 +35,7 @@ class DetailModal extends Component {
       >
         <div>
           <h3>服务信息</h3>
-          <div>
+          <div className={styles.detailRow}>
             <span>承保分公司：{record.name}</span>
             <span>机构：{record.age}</span>
             <span>大保单号：{record.address}</span>

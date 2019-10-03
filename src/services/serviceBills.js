@@ -13,3 +13,10 @@ export async function tagServiceBill(params) {
     data: params,
   });
 }
+
+export async function exportExcel(params) {
+  return request('/api/service/exportExcel', {
+    method: 'POST',
+    data: params,
+  });
+}

@@ -13,3 +13,10 @@ export async function deleteAccount(params) {
     data: params,
   });
 }
+
+export async function queryRoles(params) {
+  return request('/api/accounts/queryRoles', {
+    method: 'POST',
+    data: params,
+  });
+}

@@ -4,6 +4,7 @@ import { connect } from 'dva';
 import { Form, Select, Input, Table, Card, Upload, message, Button, Icon, Modal } from 'antd';
 import RegisterModal from './components/RegisterModal';
 import styles from './index.less';
+import { getAuthority } from '@/utils/authority';
 
 const { Search } = Input;
 const { Option } = Select;
@@ -30,8 +31,10 @@ class ManageAccount extends Component {
       dataIndex: 'role',
       id: 'role',
       render: text => {
-        const { roles } = this.props;
-        return <div>{roles[text]}</div>;
+        const currentRole = this.props.roles.find(role => {
+          return role.id === text;
+        });
+        return <div>{currentRole.name}</div>;
       },
     },
     {
@@ -68,6 +71,7 @@ class ManageAccount extends Component {
   }
 
   componentDidMount() {
+    this.getRoles();
     this.getList();
   }
 
@@ -96,6 +100,19 @@ class ManageAccount extends Component {
     });
   };
 
+  // 获取角色
+  getRoles = () => {
+    const { dispatch } = this.props;
+    const currentRole = getAuthority();
+    const param = {
+      currentRole: currentRole[0],
+    };
+    dispatch({
+      type: 'accounts/fetchRoles',
+      payload: param,
+    });
+  };
+
   handleTableChange = pagination => {
     this.setState(
       {
@@ -114,10 +131,11 @@ class ManageAccount extends Component {
     });
   };
 
-  onSearch = () => {
+  onSearch = val => {
     const { pagination } = this.state;
     this.setState(
       {
+        searchField: val,
         pagination: {
           ...pagination,
           pageSize: 10,
@@ -185,8 +203,8 @@ class ManageAccount extends Component {
           <Search
             onSearch={this.onSearch}
             onPressEnter={this.onSearch}
-            onChange={this.handleSearchChange}
-            value={searchField}
+            // onChange={this.handleSearchChange}
+            // value={searchField}
             allowClear
             placeholder="账户名／手机号"
             enterButton

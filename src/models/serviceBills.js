@@ -1,4 +1,4 @@
-import { queryServiceBills, tagServiceBill } from '@/services/serviceBills';
+import { queryServiceBills, tagServiceBill, exportExcel } from '@/services/serviceBills';
 import { message } from 'antd';
 
 const ServiceBillsModel = {
@@ -20,6 +20,13 @@ const ServiceBillsModel = {
       if (res.code === 'A00000') {
         message.success(res.msg);
       }
+      return res;
+    },
+    *toExportExcel({ payload }, { call }) {
+      const res = yield call(exportExcel, payload);
+      // if (res.code === 'A00000') {
+      //   message.success(res.msg);
+      // }
       return res;
     },
   },
