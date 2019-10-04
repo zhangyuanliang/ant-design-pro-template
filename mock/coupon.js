@@ -116,6 +116,16 @@ export default {
       ],
     },
   },
+  'POST /api/insuranceCoupon/queryBranches': {
+    msg: '操作成功',
+    code: 'A00000',
+    data: [{ id: 1, name: '北京分公司一' }, { id: 2, name: '北京分公司二' }],
+  },
+  'POST /api/insuranceCoupon/queryOrganizations': {
+    msg: '操作成功',
+    code: 'A00000',
+    data: [{ id: 1, name: '机构一' }, { id: 2, name: '机构二' }],
+  },
   'POST /api/insuranceCoupon/import': {
     msg: '操作成功',
     code: 'A00000',

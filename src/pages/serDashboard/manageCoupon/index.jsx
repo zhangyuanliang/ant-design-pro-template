@@ -23,6 +23,8 @@ const { confirm } = Modal;
 
 @connect(({ coupon }) => ({
   dataSource: coupon.dataSource,
+  branches: coupon.branches,
+  organizations: coupon.organizations,
 }))
 @Form.create()
 class ManageCoupon extends Component {
@@ -86,6 +88,8 @@ class ManageCoupon extends Component {
   }
 
   componentDidMount() {
+    this.getBranches();
+    this.getOrganizations();
     this.getList();
   }
 
@@ -113,6 +117,22 @@ class ManageCoupon extends Component {
           total: res.data.totalCount,
         },
       });
+    });
+  };
+
+  getBranches = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'coupon/fetchBranches',
+      payload: {},
+    });
+  };
+
+  getOrganizations = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'coupon/fetchOrganizations',
+      payload: {},
     });
   };
 
@@ -373,6 +393,7 @@ class ManageCoupon extends Component {
 
   getSearchPanel = () => {
     const { selectedBranch, selectedOrganization } = this.state;
+    const { branches, organizations } = this.props;
     const url = `/api/insuranceCoupon/import`;
     const importProps = {
       name: 'file',
@@ -396,32 +417,34 @@ class ManageCoupon extends Component {
     return (
       <Form className={styles.couponForm}>
         <Select
-          allowClear
           onChange={this.changeBranch}
           value={selectedBranch}
           placeholder="承保分公司"
           className={styles.selectWidth}
+          allowClear
         >
-          <Option value="1" key="1">
-            test1
-          </Option>
-          <Option value="2" key="2">
-            test2
-          </Option>
+          {branches.map(branch => {
+            return (
+              <Option value={branch.id} key={branch.id}>
+                {branch.name}
+              </Option>
+            );
+          })}
         </Select>
         <Select
-          allowClear
           onChange={this.changeOrganization}
           value={selectedOrganization}
           placeholder="机构"
           className={styles.selectWidth}
+          allowClear
         >
-          <Option value="1" key="1">
-            test1
-          </Option>
-          <Option value="2" key="2">
-            test2
-          </Option>
+          {organizations.map(org => {
+            return (
+              <Option value={org.id} key={org.id}>
+                {org.name}
+              </Option>
+            );
+          })}
         </Select>
         <Upload {...importProps}>
           <Button>

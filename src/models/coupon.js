@@ -1,4 +1,12 @@
-import { queryCoupon, queryDetail, cancelTick, newBranch, exportExcel } from '@/services/coupon';
+import {
+  queryCoupon,
+  queryDetail,
+  cancelTick,
+  newBranch,
+  exportExcel,
+  queryBranches,
+  queryOrganizations,
+} from '@/services/coupon';
 import { message } from 'antd';
 
 const CouponModel = {
@@ -6,12 +14,30 @@ const CouponModel = {
   state: {
     dataSource: [],
     detailDataSource: [],
+    branches: [],
+    organizations: [],
   },
   effects: {
     *fetchCoupon({ payload }, { call, put }) {
       const res = yield call(queryCoupon, payload);
       yield put({
         type: 'saveCoupon',
+        payload: res.data,
+      });
+      return res;
+    },
+    *fetchBranches({ payload }, { call, put }) {
+      const res = yield call(queryBranches, payload);
+      yield put({
+        type: 'saveBranches',
+        payload: res.data,
+      });
+      return res;
+    },
+    *fetchOrganizations({ payload }, { call, put }) {
+      const res = yield call(queryOrganizations, payload);
+      yield put({
+        type: 'saveOrganizations',
         payload: res.data,
       });
       return res;
@@ -51,6 +77,18 @@ const CouponModel = {
       return {
         ...state,
         dataSource: payload.dashboardVo || [],
+      };
+    },
+    saveBranches(state, { payload }) {
+      return {
+        ...state,
+        branches: payload || [],
+      };
+    },
+    saveOrganizations(state, { payload }) {
+      return {
+        ...state,
+        organizations: payload || [],
       };
     },
     saveDetail(state, { payload }) {

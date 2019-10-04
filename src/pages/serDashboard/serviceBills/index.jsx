@@ -22,8 +22,10 @@ const { Search } = Input;
 const { Option } = Select;
 const { confirm } = Modal;
 
-@connect(({ serviceBills }) => ({
+@connect(({ serviceBills, coupon }) => ({
   dataSource: serviceBills.dataSource,
+  branches: coupon.branches,
+  organizations: coupon.organizations,
 }))
 @Form.create()
 class ServiceBills extends Component {
@@ -148,6 +150,8 @@ class ServiceBills extends Component {
   }
 
   componentDidMount() {
+    this.getBranches();
+    this.getOrganizations();
     this.getList();
   }
 
@@ -177,6 +181,22 @@ class ServiceBills extends Component {
           total: res.data.totalCount,
         },
       });
+    });
+  };
+
+  getBranches = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'coupon/fetchBranches',
+      payload: {},
+    });
+  };
+
+  getOrganizations = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'coupon/fetchOrganizations',
+      payload: {},
     });
   };
 
@@ -390,6 +410,7 @@ class ServiceBills extends Component {
 
   getSearchPanel = () => {
     const { selectedBranch, selectedOrganization, searchField } = this.state;
+    const { branches, organizations } = this.props;
 
     return (
       <Form className={styles.serviceForm}>
@@ -400,12 +421,13 @@ class ServiceBills extends Component {
           className={styles.selectWidth}
           allowClear
         >
-          <Option value="1" key="1">
-            test1
-          </Option>
-          <Option value="2" key="2">
-            test2
-          </Option>
+          {branches.map(branch => {
+            return (
+              <Option value={branch.id} key={branch.id}>
+                {branch.name}
+              </Option>
+            );
+          })}
         </Select>
         <Select
           value={selectedOrganization}
@@ -414,12 +436,13 @@ class ServiceBills extends Component {
           className={styles.selectWidth}
           allowClear
         >
-          <Option value="1" key="1">
-            test1
-          </Option>
-          <Option value="2" key="2">
-            test2
-          </Option>
+          {organizations.map(org => {
+            return (
+              <Option value={org.id} key={org.id}>
+                {org.name}
+              </Option>
+            );
+          })}
         </Select>
         <div className={styles.inputWidth}>
           <Search

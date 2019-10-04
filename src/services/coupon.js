@@ -7,6 +7,20 @@ export async function queryCoupon(params) {
   });
 }
 
+export async function queryBranches(params) {
+  return request('/api/insuranceCoupon/queryBranches', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+export async function queryOrganizations(params) {
+  return request('/api/insuranceCoupon/queryOrganizations', {
+    method: 'POST',
+    data: params,
+  });
+}
+
 export async function newBranch(params) {
   return request('/api/insuranceCoupon/newBranch', {
     method: 'POST',
