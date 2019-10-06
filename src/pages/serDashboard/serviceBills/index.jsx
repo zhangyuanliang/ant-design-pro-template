@@ -22,10 +22,11 @@ const { Search } = Input;
 const { Option } = Select;
 const { confirm } = Modal;
 
-@connect(({ serviceBills, coupon }) => ({
+@connect(({ serviceBills, coupon, loading }) => ({
   dataSource: serviceBills.dataSource,
   branches: coupon.branches,
   organizations: coupon.organizations,
+  tableLoading: loading.effects['serviceBills/fetchServiceBills'],
 }))
 @Form.create()
 class ServiceBills extends Component {
@@ -472,6 +473,7 @@ class ServiceBills extends Component {
     } = this.state;
     const {
       dataSource,
+      tableLoading,
       form: { getFieldDecorator },
     } = this.props;
     const rowSelection = {
@@ -490,6 +492,7 @@ class ServiceBills extends Component {
           pagination={pagination}
           onChange={this.handleTableChange}
           onShowSizeChange={this.handleTableChange}
+          loading={tableLoading}
           size="middle"
           scroll={{ x: '160%' }}
         />
@@ -506,7 +509,7 @@ class ServiceBills extends Component {
           centered={true}
           width={380}
         >
-          <p style={{ fontSize: 12 }}>导出单量已达到上限1000条，报表发送至您的邮箱</p>
+          <p style={{ fontSize: 12 }}>导出单量已达上限1000条，报表发送至您的邮箱</p>
           <Form layout="inline" style={{ display: 'flex', justifyContent: 'center' }}>
             <Form.Item label="邮箱：" style={{ marginBottom: 0, height: 40 }}>
               {getFieldDecorator('emailAdress', {

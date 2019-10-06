@@ -166,7 +166,6 @@ class RegisterModal extends Component {
             })(
               <Select
                 disabled={[2, 3].includes(currentRole)}
-                defaultValue={currentRole}
                 onChange={this.changeRole}
                 placeholder="请选择"
                 style={{ width: 180 }}

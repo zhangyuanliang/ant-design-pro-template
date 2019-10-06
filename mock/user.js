@@ -87,7 +87,8 @@ export default {
         code: 'A00000',
         data: {
           token: 'token',
-          auth: ['admin'],
+          // auth: ['admin'],
+          auth: [2],
         },
       });
       return;

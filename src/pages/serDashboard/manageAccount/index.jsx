@@ -10,9 +10,10 @@ const { Search } = Input;
 const { Option } = Select;
 const { confirm } = Modal;
 
-@connect(({ accounts }) => ({
+@connect(({ accounts, loading }) => ({
   dataSource: accounts.dataSource,
   roles: accounts.roles,
+  tableLoading: loading.effects['accounts/fetchAccounts'],
 }))
 class ManageAccount extends Component {
   columns = [
@@ -219,7 +220,7 @@ class ManageAccount extends Component {
 
   render() {
     const { pagination, isShowModal } = this.state;
-    const { dataSource } = this.props;
+    const { dataSource, tableLoading } = this.props;
 
     return (
       <Card>
@@ -231,6 +232,7 @@ class ManageAccount extends Component {
           pagination={pagination}
           onChange={this.handleTableChange}
           onShowSizeChange={this.handleTableChange}
+          loading={tableLoading}
           size="middle"
         />
         <RegisterModal visible={isShowModal} hide={this.hideModal}></RegisterModal>
