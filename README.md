@@ -2,6 +2,10 @@
 
 This project is initialized with [Ant Design Pro](https://pro.ant.design). Follow is the quick guide for how to use.
 
+## 展示效果
+
+![Image text](https://github.com/zhangyuanliang/ant-design-pro-template/blob/master/printscreen/1.jpg)
+
 ## Environment Prepare
 
 Install `node_modules`:
