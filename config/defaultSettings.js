@@ -10,7 +10,7 @@ export default {
   menu: {
     locale: true,
   },
-  title: 'E路援',
+  title: 'terminus',
   pwa: false,
   iconfontUrl: '',
   siderWidth: 200,

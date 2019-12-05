@@ -28,7 +28,7 @@ const UserLayout = props => {
     >
       <div className={styles.container}>
         <div className={styles.content}>
-          <div className={styles.title}>E路援</div>
+          <div className={styles.title}>terminus</div>
           {children}
         </div>
       </div>
