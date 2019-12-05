@@ -78,13 +78,13 @@ const BasicLayout = props => {
 
   return (
     <ProLayout
-      logo={logo}
+      // logo={logo}
+      logo={false}
       onCollapse={handleMenuCollapse}
       menuItemRender={(menuItemProps, defaultDom) => {
         if (menuItemProps.isUrl) {
           return defaultDom;
         }
-
         return <Link to={menuItemProps.path}>{defaultDom}</Link>;
       }}
       breadcrumbRender={(routers = []) => [
