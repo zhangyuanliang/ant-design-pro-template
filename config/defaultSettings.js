@@ -1,6 +1,7 @@
 export default {
   navTheme: 'dark',
-  primaryColor: '#1890FF',
+  // primaryColor: '#1890FF',
+  primaryColor: '#c62e2d',
   layout: 'sidemenu',
   contentWidth: 'Fluid',
   fixedHeader: false,
