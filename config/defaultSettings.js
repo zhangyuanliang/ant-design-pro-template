@@ -13,4 +13,5 @@ export default {
   title: 'E路援',
   pwa: false,
   iconfontUrl: '',
+  siderWidth: 200,
 };
